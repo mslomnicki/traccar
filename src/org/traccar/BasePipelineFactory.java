@@ -29,6 +29,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
+import org.traccar.events.AlertEventHandler;
 import org.traccar.events.CommandResultEventHandler;
 import org.traccar.events.DriverEventHandler;
 import org.traccar.events.FuelDropEventHandler;
@@ -37,7 +38,7 @@ import org.traccar.events.IgnitionEventHandler;
 import org.traccar.events.MaintenanceEventHandler;
 import org.traccar.events.MotionEventHandler;
 import org.traccar.events.OverspeedEventHandler;
-import org.traccar.events.AlertEventHandler;
+import org.traccar.events.SlidingWindowIgnitionEventHandler;
 import org.traccar.helper.Log;
 import org.traccar.processing.ComputedAttributesHandler;
 import org.traccar.processing.CopyAttributesHandler;
@@ -68,6 +69,7 @@ public abstract class BasePipelineFactory implements ChannelPipelineFactory {
     private IgnitionEventHandler ignitionEventHandler;
     private MaintenanceEventHandler maintenanceEventHandler;
     private DriverEventHandler driverEventHandler;
+    private SlidingWindowIgnitionEventHandler slidingWindowIgnitionEventHandler;
 
     private static final class OpenChannelHandler extends SimpleChannelHandler {
 
@@ -178,6 +180,7 @@ public abstract class BasePipelineFactory implements ChannelPipelineFactory {
             ignitionEventHandler = new IgnitionEventHandler();
             maintenanceEventHandler = new MaintenanceEventHandler();
             driverEventHandler = new DriverEventHandler();
+            slidingWindowIgnitionEventHandler = new SlidingWindowIgnitionEventHandler();
         }
     }
 
@@ -275,6 +278,10 @@ public abstract class BasePipelineFactory implements ChannelPipelineFactory {
 
         if (driverEventHandler != null) {
             pipeline.addLast("DriverEventHandler", driverEventHandler);
+        }
+
+        if (slidingWindowIgnitionEventHandler != null) {
+            pipeline.addLast("SlidingWindowIgnitionEventHandler", slidingWindowIgnitionEventHandler);
         }
 
         pipeline.addLast("mainHandler", new MainEventHandler());

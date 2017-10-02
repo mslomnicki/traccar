@@ -58,4 +58,13 @@ public class DeviceState {
         return overspeedPosition;
     }
 
+    private boolean ignitionDuringPauseState;
+
+    public boolean getIgnitionDuringPauseState() {
+        return ignitionDuringPauseState;
+    }
+
+    public void setIgnitionDuringPauseState(boolean ignitionDuringPauseState) {
+        this.ignitionDuringPauseState = ignitionDuringPauseState;
+    }
 }
